@@ -16,7 +16,7 @@ public class PanelPrincipal extends JPanel implements ActionListener {
     private double operando1 = 0;
     private String operador = "";
 
-    // Crear la ventana principal
+    // Crear la ventana principal (constructor)
     public PanelPrincipal() {
         initComponents();
     }
@@ -53,41 +53,54 @@ public class PanelPrincipal extends JPanel implements ActionListener {
         // Guardo en una variable el contenido del botón que he pulsado
         String texto = boton.getText();
 
-        // Si el contenido del botón coincide con un número dentro del rango de 1 al 9, lo muestro en el área de texto
         if (texto.matches("[0-9]")) {
+            // Añadir dígito al área de texto para que quede visible
             areaTexto.append(texto);
-        }
 
-        else if (texto.matches("[+\\-*/]")) {
-            operando1 = Double.parseDouble(areaTexto.getText());
-            operador = texto;
-            areaTexto.append(" " + operador + " ");
-        }
-
-        else if (texto.equals("=")) {
-
-            double operando2 = Double.parseDouble(areaTexto.getText());
-            double resultado = 0;
-
-            switch (operador) {
-                case "+":
-                    resultado = operando1 + operando2;
-                    break;
-                case "-":
-                    resultado = operando1 - operando2;
-                    break;
-                case "*":
-                    resultado = operando1 * operando2;
-                    break;
-                case "/":
-                    resultado = operando1 / operando2;
-                    break;
+        } else if (texto.matches("[+\\-*/]")) {
+            String valor = areaTexto.getText().trim();
+            if (!valor.isEmpty()) {
+                try {
+                    operando1 = Double.parseDouble(valor);
+                    operador = texto;
+                    areaTexto.append(" " + operador + " ");
+                } catch (NumberFormatException e) {
+                    // Si no es número, no hacer nada
+                }
             }
 
-            areaTexto.append(resultado + " ");
-        }
+        } else if (texto.equals("=")) {
+            String pantalla = areaTexto.getText().trim();
+            String[] partes = pantalla.split(" ");
+            if (partes.length >= 3 && !operador.isEmpty()) {
+                try {
+                    double operando2 = Double.parseDouble(partes[2]);
+                    double resultado = 0;
 
-        else if (texto.equals("C")) {
+                    switch (operador) {
+                        case "+":
+                            resultado = operando1 + operando2;
+                            break;
+                        case "-":
+                            resultado = operando1 - operando2;
+                            break;
+                        case "*":
+                            resultado = operando1 * operando2;
+                            break;
+                        case "/":
+                            resultado = operando1 / operando2;
+                            break;
+                    }
+
+                    areaTexto.setText(Double.toString(resultado));
+                    operador = "";
+
+                } catch (NumberFormatException e) {
+                    // no hacer nada
+                }
+            }
+
+        } else if (texto.equals("C")) {
             areaTexto.setText("");
             operando1 = 0;
             operador = "";
