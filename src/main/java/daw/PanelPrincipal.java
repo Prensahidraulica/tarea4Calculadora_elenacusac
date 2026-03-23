@@ -92,11 +92,13 @@ public class PanelPrincipal extends JPanel implements ActionListener {
                             break;
                     }
 
-                    areaTexto.setText(Double.toString(resultado));
+                    areaTexto.setText(pantalla + " = " + resultado);
                     operador = "";
 
                 } catch (NumberFormatException e) {
                     // no hacer nada
+                } catch (ArithmeticException are) {
+                    throw new ArithmeticException("No puedes dividir por cero.");
                 }
             }
 
